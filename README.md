@@ -181,7 +181,7 @@ php artisan test
 
 
 <!-- OBSERVAÇÃO -->
-## Implementações Futuras
+## Próximas Implementações
 
 1. Implementação de Proxy Design Pattern: Criação de classes **Proxy** que herdarão a classe Model e farão a interação entre a classe controller e resource.
 Nesta classe irá existir metods get e set e outros.

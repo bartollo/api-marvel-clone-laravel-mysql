@@ -183,15 +183,12 @@ php artisan test
 <!-- OBSERVAÇÃO -->
 ## Implementações Futuras
 
-1. Implementação de Proxy Design Pattern.
-Criando classes proxy que herdarão a classe Model e farão a interação entre a classe controller e resource.
+1. Implementação de Proxy Design Pattern: Criação de classes **Proxy** que herdarão a classe Model e farão a interação entre a classe controller e resource.
 Nesta classe irá existir metods get e set e outros.
 
-1. Implementação de Strategy Design Pattern
-Criando classes de Enum implementation para valores padrões utlizados principalmente nos parâmetros de entrada da api, dentro outros.
+1. Implementação de Strategy Design Pattern: Criação de classes de **Enum implementation** para valores padrões utlizados principalmente nos parâmetros de entrada da api, dentro outros.
 
-1. Implementação de Casses Filters para melhorar Coesão
-Criar Classe Filter que vai ser responsável por administrar os parâmetros recebidos pelas classes Request, removendo a responsabilidade das outras classes que os manipulam.
+1. Implementação de Casses Filters para melhorar Coesão: Criação de classes **Filter** que vai ser responsável por administrar os parâmetros recebidos pelas classes Request, removendo a responsabilidade das outras classes que os manipulam.
 
 
 <!-- LICENSE -->

@@ -175,91 +175,6 @@ Os parâmetros e códigos de Erros são aplicados a todos os EndPoints informado
 php artisan test
 ```
 
-   PASS  Tests\Feature\EndPointsTest
-   
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters para todos
-  
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters para id
-  
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters comics
-  
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters events
-  
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters series
-  
-  ✓ verifica tempo de resposta de end point menor15 microsegundos para characters stories
-  
-
-   PASS  Tests\Feature\DefaultRequestTest
-   
-  ✓ validacao de request com todos os parametros validos
-  
-  ✓ validacao de request com offset e limit invalidos
-  
-  ✓ validacao de request com order invalido
-  
-  ✓ validacao de request com dados invalidos
-  
-  ✓ request sem parametros para ajuste automatico do sistema
-  
-  ✓ request para uri errada
-  
-  ✓ request com id inexistente no banco
-
-
-   PASS  Tests\Feature\CharacterComicResourceTest
-   
-  ✓ compara retorno da api com retorno da rota de comics para uri sem id
-  
-  ✓ compara retorno da api com character comic resource para uri com id
-  
-  ✓ compara retorno da api com character comic resource para uri com id inexistente
-  
-
-   PASS  Tests\Feature\CharacterEventResourceTest
-   
-  ✓ compara retorno da api com retorno da rota de events para uri sem id
-  
-  ✓ compara retorno da api com character event resource para uri com id
-  
-  ✓ compara retorno da api com character event resource para uri com id inexistente
-  
-
-   PASS  Tests\Feature\CharacterResourceTest
-   
-  ✓ compara retorno da api com character resource
-  
-  ✓ compara retorno da api com character resource para uri com id
-  
-  ✓ compara retorno da api com character resource para uri com id inexistente
-  
-
-   PASS  Tests\Feature\CharacterSerieResourceTest
-   
-  ✓ compara retorno da api com retorno da rota de series para uri sem id
-  
-  ✓ compara retorno da api com character serie resource para uri com id
-  
-  ✓ compara retorno da api com character serie resource para uri com id inexistente
-  
-
-   PASS  Tests\Feature\CharacterStoryResourceTest
-   
-  ✓ compara retorno da api com retorno da rota de stories para uri sem id
-  
-  ✓ compara retorno da api com character story resource para uri com id
-  
-  ✓ compara retorno da api com character story resource para uri com id inexistente
-  
-
-   PASS  Tests\Feature\CharacterUrlResourceTest
-   
-  ✓ compara retorno da api com retorno da rota de url para uri sem id
-  
-  ✓ compara retorno da api com character resource para uri com id
-  
-  
-
 
 <!-- OBSERVAÇÃO -->
 ## Observação
@@ -272,10 +187,6 @@ php artisan test
 
 1. Implementação de Proxy Design Pattern: Criação de classes **Proxy** que herdarão a classe Model e farão a interação entre a classe controller e resource.
 Nesta classe irá existir metods get e set e outros.
-
-1. Implementação de Strategy Design Pattern: Criação de classes de **Enum implementation** para valores padrões utlizados principalmente nos parâmetros de entrada da api, dentro outros.
-
-1. Implementação de Casses Filters para melhorar Coesão: Criação de classes **Filter** que vai ser responsável por administrar os parâmetros recebidos pelas classes Request, removendo a responsabilidade das outras classes que os manipulam.
 
 
 <!-- LICENSE -->

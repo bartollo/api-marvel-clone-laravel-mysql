@@ -179,6 +179,18 @@ php artisan test
 
 1. Os dados apresentados pela API não são os mesmos da Marvel. Todos as informações estão sendo geradas pelas factories através do classe fake.
 
+
+<!-- OBSERVAÇÃO -->
+## Próximas Implementações
+
+1. Implementação de Proxy Design Pattern: Criação de classes **Proxy** que herdarão a classe Model e farão a interação entre a classe controller e resource.
+Nesta classe irá existir metods get e set e outros.
+
+1. Implementação de Strategy Design Pattern: Criação de classes de **Enum implementation** para valores padrões utlizados principalmente nos parâmetros de entrada da api, dentro outros.
+
+1. Implementação de Casses Filters para melhorar Coesão: Criação de classes **Filter** que vai ser responsável por administrar os parâmetros recebidos pelas classes Request, removendo a responsabilidade das outras classes que os manipulam.
+
+
 <!-- LICENSE -->
 ## Licença
 

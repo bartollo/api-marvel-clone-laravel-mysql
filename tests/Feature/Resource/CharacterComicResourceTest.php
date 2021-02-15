@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Enums\QueryEnum;
 use App\Models\Character;
 use App\Models\CharacterComic;
 use Illuminate\Support\Facades\URL;
@@ -45,15 +46,15 @@ class CharacterComicResourceTest extends TestCase
     public function testComparaRetornoDaApiComCharacterComicResourceParaUriComId(): void
     {
 
-        $offset = 1;
-        $limit = 20;
-        $orderBy = 'id';
+        $offset = QueryEnum::DEFAULT_OFFSET;
+        $limit = QueryEnum::DEFAULT_LIMIT;
+        $orderBy = QueryEnum::DEFAULT_ORDER_FIELD;
 
         $character = Character::with(['charactersComics' => function ($query) use ($orderBy ,$limit ,$offset){
             $query->offset($offset)->limit($limit)->orderBy($orderBy, 'ASC');
-        },'charactersComics.comic'])->inRandomOrder()->first();
+        },'charactersComics.comic'])->whereHas('charactersComics.comic')->inRandomOrder()->first();
 
-        $resource = CharacterComicResource::collection($character->charactersComics);;
+        $resource = CharacterComicResource::collection($character->charactersComics);
 
         $request = $this->json('GET','/api/characters/'.$character->id.'/comics',['limit'=>$limit, 'offset'=>$offset, 'order'=>$orderBy]);
 
@@ -61,9 +62,10 @@ class CharacterComicResourceTest extends TestCase
         $data = json_decode($request->getContent(), true);
 
         //Dados Retornados pelo Resource
-        $resourceData = $resource->response($request)->getData(true);
+        $resourceData = $resource->resolve();
 
-        $this->assertEquals($data['data']['results'], $resourceData["data"]);
+
+        $this->assertEquals($data['data']['results'], $resourceData);
 
     }
 
@@ -83,7 +85,7 @@ class CharacterComicResourceTest extends TestCase
         $response = $this->json('GET', '/api/characters/'.$idInexistente.'/comics');
 
         $response->assertStatus(404)
-            ->assertJson(['message' => "We don't recognize the parameter id"]);
+            ->assertJson(['message' => "No records found."]);
 
     }
 }

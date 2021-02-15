@@ -6,6 +6,8 @@ use App\Models\Character;
 use App\Factories\CharacterFactory;
 use App\Http\Requests\CharacterRequest;
 use App\Http\Controllers\API\BaseController;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
+
 
 
 /**
@@ -41,9 +43,12 @@ class CharacterController extends BaseController
      */
     public function index(CharacterRequest $request)
     {
-        $character = $this->character->getAll($request->order, $request->limit, $request->offset);
 
-        return $this->sendResponse($character, $request->limit, $request->offset, $character->count());
+        $requestParameters = new CharacterRequestParameters($request);
+
+        $characters = $this->character->getAll($requestParameters);
+
+        return $this->sendResponse($characters, $requestParameters);
     }
 
     /**
@@ -53,14 +58,14 @@ class CharacterController extends BaseController
      * @param  mixed $request
      * @return void
      */
-    public function show(Character $character,CharacterRequest $request)
+    public function show(Character $character, CharacterRequest $request)
     {
-        $limit=1;
-        $offset=0;
 
-        $character = $this->character->find($character->id,$request->order, $limit, $offset);
+        $requestParameters = new CharacterRequestParameters($request);
 
-        return $this->sendResponse($character, $limit, $offset, $total=1);
+        $character = $this->character->find($character->id, $requestParameters);
+
+        return $this->sendResponse($character, $requestParameters);
     }
 
 }

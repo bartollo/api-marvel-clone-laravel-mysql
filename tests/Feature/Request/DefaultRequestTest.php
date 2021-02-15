@@ -150,7 +150,7 @@ class DefaultRequestTest extends TestCase
         $response = $this->json('GET', '/api/characters/'.$idInexistente);
 
         $response->assertStatus(404)
-            ->assertJson(['message' => "We don't recognize the parameter id"]);
+            ->assertJson(['message' => "No records found."]);
     }
 
 }

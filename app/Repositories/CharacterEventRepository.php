@@ -2,20 +2,29 @@
 
 namespace App\Repositories;
 
+use App\Enums\QueryEnum;
 use App\Models\Character;
-use App\Models\CharacterEvent;
-use App\Contracts\RepositoryInterface;
 use App\Http\Resources\CharacterEventResource;
+use App\Contracts\CharacterRepositoryInterface;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
 
-class CharacterEventRepository implements RepositoryInterface
+class CharacterEventRepository implements CharacterRepositoryInterface
 {
-    public function find($id, $orderBy = null, $limit = null, $offset= null)
+    public function find( $id, CharacterRequestParameters $requestParameters)
     {
-        $character = Character::with(['charactersEvents' => function ($query) use ($orderBy ,$limit ,$offset){
-            $query->offset($offset)->limit($limit)->orderBy($orderBy, 'ASC');
-        },'charactersEvents.event'])->findOrFail($id);
+
+        $character = Character::with(['charactersEvents' => function ($query) use ($requestParameters){
+
+            $query->limit($requestParameters->getLimit())->offset($requestParameters->getOffset())->orderBy($requestParameters->getOrder(), QueryEnum::DEFAULT_ORDER_TYPE)->get();
+
+        },'charactersEvents.event'])->whereHas('charactersEvents.event',function($query) use ($requestParameters){
+
+            $query->filter($requestParameters->getQuery());
+
+        })->findOrFail($id);
 
         return CharacterEventResource::collection($character->charactersEvents);
     }
+
 
 }

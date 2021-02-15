@@ -6,6 +6,7 @@ use App\Models\Character;
 use App\Http\Requests\CharacterRequest;
 use App\Factories\CharacterSerieFactory;
 use App\Http\Controllers\API\BaseController;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
 
 
 /**
@@ -47,8 +48,10 @@ class CharacterSerieController extends BaseController
     public function show(Character $character, CharacterRequest $request)
     {
 
-        $characterSerie = $this->characterSerie->find($character->id, $request->order, $request->limit, $request->offset);
+        $requestParameters = new CharacterRequestParameters($request);
 
-        return $this->sendResponse($characterSerie, $request->limit, $request->offset, $characterSerie->count());
+        $characterSerie = $this->characterSerie->find($character->id, $requestParameters);
+
+        return $this->sendResponse($characterSerie, $requestParameters);
     }
 }

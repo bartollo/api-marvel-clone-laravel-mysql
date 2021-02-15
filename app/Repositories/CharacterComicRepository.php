@@ -2,19 +2,25 @@
 
 namespace App\Repositories;
 
+use App\Enums\QueryEnum;
 use App\Models\Character;
-use App\Models\CharacterComic;
-use App\Contracts\RepositoryInterface;
-use App\Http\Resources\CharacterResource;
 use App\Http\Resources\CharacterComicResource;
+use App\Contracts\CharacterRepositoryInterface;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
 
-class CharacterComicRepository implements RepositoryInterface
+class CharacterComicRepository implements CharacterRepositoryInterface
 {
-    public function find($id, $orderBy = null, $limit = null, $offset= null)
+    public function find( $id, CharacterRequestParameters $requestParameters)
     {
-        $character = Character::with(['charactersComics' => function ($query) use ($orderBy ,$limit ,$offset){
-            $query->offset($offset)->limit($limit)->orderBy($orderBy, 'ASC');
-        },'charactersComics.comic'])->findOrFail($id);
+        $character = Character::with(['charactersComics','charactersComics.comic' => function ($query) use ($requestParameters){
+
+            $query->limit($requestParameters->getLimit())->offset($requestParameters->getOffset())->orderBy($requestParameters->getOrder(), QueryEnum::DEFAULT_ORDER_TYPE)->get();
+
+        }])->whereHas('charactersComics.comic',function($query) use ($requestParameters){
+
+            $query->filter($requestParameters->getQuery());
+
+        })->findOrFail($id);
 
         return CharacterComicResource::collection($character->charactersComics);
     }

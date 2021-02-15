@@ -19,8 +19,11 @@ class CharacterStoryResource extends JsonResource
     public function toArray($request)
     {
         return [
+            // @phpstan-ignore-next-line
             'resourceURI' => URL::to('api/stories/'.$this->story->id),
+            // @phpstan-ignore-next-line
             'name'=> $this->story->name,
+            // @phpstan-ignore-next-line
             'type' => $this->story->story_type_name
         ];
     }

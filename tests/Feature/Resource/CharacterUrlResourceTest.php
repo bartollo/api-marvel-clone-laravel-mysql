@@ -53,9 +53,9 @@ class CharacterUrlResourceTest extends TestCase
         $data = json_decode($request->getContent(), true);
 
         //Dados Retornados pelo Resource
-        $resourceData = $resource->response($request)->getData(true);
+        $resourceData = $resource->resolve();
 
-        $this->assertEquals($data['data']["results"]['urls'], $resourceData["data"]);
+        $this->assertEquals($data['data']["results"]['urls'], $resourceData);
 
     }
 

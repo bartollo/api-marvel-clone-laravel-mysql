@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\QueryEnum;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Contracts\RequestInterface;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Concerns\InteractsWithInput;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
@@ -25,6 +28,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CharacterRequest extends FormRequest implements RequestInterface
 {
+    use InteractsWithInput;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -46,6 +51,7 @@ class CharacterRequest extends FormRequest implements RequestInterface
             'order' => ['string',Rule::in(['name', 'id'])],
             'limit' => 'numeric|max:100|min:1',
             'offset' => 'numeric|max:99|min:0|lte:limit',
+            'name' => 'string|max:100',
         ];
     }
 
@@ -58,18 +64,25 @@ class CharacterRequest extends FormRequest implements RequestInterface
      */
     protected function prepareForValidation()
     {
-        // @phpstan-ignore-next-line
-        $this->order = is_null($this->order) ? 'id': $this->order;
-        // @phpstan-ignore-next-line
-        $this->limit = is_null($this->limit) ? 20: $this->limit;
-        // @phpstan-ignore-next-line
-        $this->offset = is_null($this->offset) ? 1: $this->offset;
+        $this->merge(
+            [
+                // @phpstan-ignore-next-line
+                'order' => is_null($this->order) ? QueryEnum::DEFAULT_ORDER_FIELD: $this->order,
+                // @phpstan-ignore-next-line
+                'limit' => is_null($this->limit) ? QueryEnum::DEFAULT_LIMIT: $this->limit,
+                // @phpstan-ignore-next-line
+                'offset' => is_null($this->offset) ? QueryEnum::DEFAULT_OFFSET: $this->offset,
+            ]
+        );
+
     }
 
 
     public function messages()
     {
         return [
+            'name.string'  => 'Invalid value passed to filter',
+            'name.max' => 'Invalid value passed to filter',
             'order.string' => 'Invalid value passed to filter',
             'limit.numeric'  => 'Invalid value passed to filter',
             'offset.numeric'  => 'Invalid value passed to filter',
@@ -83,10 +96,8 @@ class CharacterRequest extends FormRequest implements RequestInterface
     protected function failedValidation(Validator $validator) {
         $response = [
             'message' => $validator->errors()->first(),
-            //'data' => $validator->errors()
         ];
         throw new HttpResponseException(response()->json($response, 409));
     }
-
 
 }

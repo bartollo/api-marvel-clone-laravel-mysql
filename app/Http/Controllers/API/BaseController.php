@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Database\Eloquent\Collection;
 use App\Http\Controllers\Controller as Controller;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 
 /**
@@ -18,9 +20,16 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendResponse($result, $limit, $offset, $count)
+    public function sendResponse($result, $requestParameters)
     {
-        $totalResult = $count > $limit ? $limit : $count;
+        //Verifica e valores do resultado X valores dos parâmetros
+        if( $result instanceof Collection || $result instanceof AnonymousResourceCollection) {
+            $totalResult = $result->count() > $requestParameters->getLimit() ? $requestParameters->getLimit() : $result->count();
+            $count= $result->count();
+        }else{
+            $totalResult = 1;
+            $count = 1;
+        }
 
     	$response = [
             'code' => 200,
@@ -30,8 +39,8 @@ class BaseController extends Controller
             'attributionHTML' => '<a href="http://marvel.com">Data provided by Marvel. © 2021 MARVEL</a>',
             'etag' => 'f0fbae65eb2f8f28bdeea0a29be8749a4e67acb3',
             'data' => [
-                'offset'=> $offset,
-                'limit'=> $limit,
+                'offset'=> $requestParameters->getOffset(),
+                'limit'=> $requestParameters->getLimit(),
                 'total'=> $totalResult,
                 'count'=> $count,
                 'results'=> $result,

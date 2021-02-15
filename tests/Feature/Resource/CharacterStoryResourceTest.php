@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Enums\QueryEnum;
 use App\Models\Character;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -45,13 +46,13 @@ class CharacterStoryResourceTest extends TestCase
      */
     public function testComparaRetornoDaApiComCharacterStoryResourceParaUriComId(): void
     {
-        $offset = 1;
-        $limit = 20;
-        $orderBy = 'id';
+        $offset = QueryEnum::DEFAULT_OFFSET;
+        $limit = QueryEnum::DEFAULT_LIMIT;
+        $orderBy = QueryEnum::DEFAULT_ORDER_FIELD;
 
         $character = Character::with(['charactersStories' => function ($query) use ($orderBy ,$limit ,$offset){
             $query->offset($offset)->limit($limit)->orderBy($orderBy, 'ASC');
-        },'charactersStories.story'])->inRandomOrder()->first();
+        },'charactersStories.story'])->whereHas('charactersStories.story')->inRandomOrder()->first();
 
         $resource = CharacterStoryResource::collection($character->charactersStories);;
 
@@ -61,9 +62,9 @@ class CharacterStoryResourceTest extends TestCase
         $data = json_decode($request->getContent(), true);
 
         //Dados Retornados pelo Resource
-        $resourceData = $resource->response($request)->getData(true);
+        $resourceData = $resource->resolve();;
 
-        $this->assertEquals($data['data']['results'], $resourceData["data"]);
+        $this->assertEquals($data['data']['results'], $resourceData);
 
     }
 
@@ -83,7 +84,7 @@ class CharacterStoryResourceTest extends TestCase
         $response = $this->json('GET', '/api/characters/'.$idInexistente.'/stories');
 
         $response->assertStatus(404)
-            ->assertJson(['message' => "We don't recognize the parameter id"]);
+            ->assertJson(['message' => "No records found."]);
 
     }
 }

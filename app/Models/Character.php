@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Character extends Model
 {
-    use HasFactory;
+    use HasFactory,Filterable;
 
     /**
      * The table associated with the model.
@@ -78,6 +79,16 @@ class Character extends Model
     public function charactersUrls()
     {
         return $this->hasMany('App\Models\CharacterUrl');
+    }
+
+    /**
+     * modelFilter
+     *
+     * @return void
+     */
+    public function modelFilter()
+    {
+        return $this->provideFilter(\App\Models\Filters\CharacterFilter::class);
     }
 
 }

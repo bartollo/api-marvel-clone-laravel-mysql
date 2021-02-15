@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
                     case '500';
                         $message ='errors/500';
                     default:
-                        $message ="We don't recognize the parameter id";
+                        $message ="No records found.";
                 }
             }
 

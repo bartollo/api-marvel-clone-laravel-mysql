@@ -19,7 +19,9 @@ class CharacterUrlResource extends JsonResource
     public function toArray($request)
     {
         return [
+            // @phpstan-ignore-next-line
             'url' => $this->url,
+            // @phpstan-ignore-next-line
             'type' => $this->character_url_type_name
         ];
     }

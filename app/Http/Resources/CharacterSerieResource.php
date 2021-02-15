@@ -19,7 +19,9 @@ class CharacterSerieResource extends JsonResource
     public function toArray($request)
     {
         return [
+            // @phpstan-ignore-next-line
             'resourceURI' => URL::to('api/series/'.$this->serie->id),
+            // @phpstan-ignore-next-line
             'name'=> $this->serie->name,
         ];
     }

@@ -2,40 +2,32 @@
 
 namespace App\Repositories;
 
+use App\Enums\QueryEnum;
 use App\Models\Character;
-use Illuminate\Support\Facades\DB;
-use App\Contracts\RepositoryInterface;
-use App\Http\Requests\CharacterRequest;
-use Illuminate\Database\Query\Builder;
 use App\Http\Resources\CharacterResource;
+use App\Contracts\CharacterRepositoryInterface;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
 
-class CharacterRepository implements RepositoryInterface
+
+
+class CharacterRepository implements CharacterRepositoryInterface
 {
 
-    public function getAll($orderBy = null, $limit = null, $offset= null)
+    public function getAll( CharacterRequestParameters $requestParameters)
     {
 
-        $query = Character::query();
+        $characters = Character::filter($requestParameters->getQuery())->limit($requestParameters->getLimit())->offset($requestParameters->getOffset())->orderBy($requestParameters->getOrder(), QueryEnum::DEFAULT_ORDER_TYPE)->get();
 
-        if($offset !== null){
-            $query = $query->offset($offset);
-        }
+        return CharacterResource::collection($characters);
 
-        if($limit !== null){
-            $query = $query->take($limit);
-        }
-
-        if($orderBy !== null){
-            $query = $query->orderBy($orderBy,'asc');
-        }
-
-        return CharacterResource::collection($query->get());
     }
 
-    public function find($id, $orderBy = null, $limit = null, $offset= null)
+    public function find( $id, CharacterRequestParameters $requestParameters)
     {
 
-      $character = Character::with(['charactersComics','charactersComics.comic','charactersEvents','charactersEvents.event','characterSeries','characterSeries.serie','charactersStories','charactersStories.story','charactersStories.story.storyType','charactersUrls'])->findOrFail($id);
+      $character = Character::filter($requestParameters->getQuery())
+      ->with(['charactersComics','charactersComics.comic','charactersEvents','charactersEvents.event','characterSeries','characterSeries.serie','charactersStories','charactersStories.story','charactersStories.story.storyType','charactersUrls'])
+      ->limit($requestParameters->getLimit())->offset($requestParameters->getOffset())->orderBy($requestParameters->getOrder(), QueryEnum::DEFAULT_ORDER_TYPE)->findOrFail($id);
 
       return new CharacterResource($character);
     }

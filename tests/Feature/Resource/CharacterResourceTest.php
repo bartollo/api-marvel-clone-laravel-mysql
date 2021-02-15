@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Enums\QueryEnum;
 use App\Models\Character;
 use App\Http\Resources\CharacterResource;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -26,13 +27,13 @@ class CharacterResourceTest extends TestCase
     public function testComparaRetornoDaApiComCharacterResource(): void
     {
 
-        $limit  = 1;
-        $offset = 1;
-        $order = 'id';
+        $offset = QueryEnum::DEFAULT_OFFSET;
+        $limit = QueryEnum::DEFAULT_LIMIT;
+        $orderBy = QueryEnum::DEFAULT_ORDER_FIELD;
 
-        $characters = Character::OrderBy($order,'ASC')->limit($limit)->offset($offset)->get();
+        $characters = Character::OrderBy($orderBy,'ASC')->limit($limit)->offset($offset)->get();
         $resource = CharacterResource::collection($characters);
-        $request = $this->json('GET','/api/characters/',['order' => $order,'limit' => $limit,'offset'=>$offset]);
+        $request = $this->json('GET','/api/characters/',['order' => $orderBy,'limit' => $limit,'offset'=>$offset]);
 
         //Dados retornados pelo Request da API
         $data = json_decode($request->getContent(), true);
@@ -85,7 +86,7 @@ class CharacterResourceTest extends TestCase
         $response = $this->json('GET', '/api/characters/'.$idInexistente);
 
         $response->assertStatus(404)
-            ->assertJson(['message' => "We don't recognize the parameter id"]);
+            ->assertJson(['message' => "No records found."]);
 
     }
 }

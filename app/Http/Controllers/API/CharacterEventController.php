@@ -6,6 +6,8 @@ use App\Models\Character;
 use App\Http\Requests\CharacterRequest;
 use App\Factories\CharacterEventFactory;
 use App\Http\Controllers\API\BaseController;
+use App\Http\Requests\Parameters\CharacterRequestParameters;
+
 
 
 /**
@@ -45,8 +47,12 @@ class CharacterEventController extends BaseController
      */
     public function show(Character $character, CharacterRequest $request)
     {
-        $characterEvent = $this->characterEvent->find($character->id, $request->order, $request->limit, $request->offset);
+        $requestParameters = new CharacterRequestParameters($request);
 
-        return $this->sendResponse($characterEvent, $request->limit, $request->offset, $characterEvent->count());
+        $characterEvent = $this->characterEvent->find($character->id, $requestParameters);
+
+        return $this->sendResponse($characterEvent, $requestParameters);
     }
+
+
 }

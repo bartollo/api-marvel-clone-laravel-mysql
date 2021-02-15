@@ -25,4 +25,6 @@ class CharacterEventResource extends JsonResource
             'name'=> $this->event->name,
         ];
     }
+
+
 }
